@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: producer
+    server :
+      port : 8089
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+

@@ -1,5 +1,6 @@
 package com.kafka_producer.producer.service;
 
+import com.kafka_producer.producer.dto.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -26,6 +27,34 @@ public class KafkaProducerService {
             }
         });
     }
+
+
+    public void sendToTopic1(Employee employee) {
+
+        try {
+            CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send("consumerTopic", employee);
+            future.whenComplete((result, exception) ->
+            {
+                if (exception == null) {
+                    System.out.println("Sent Message = [" + employee.toString() + "] with offset = "
+                            + result.getRecordMetadata().offset() + " ]"
+                    );
+                } else {
+                    System.out.println("Unable to send message" + exception.getMessage());
+                }
+            });
+
+        } catch (Exception exception) {
+            System.out.println(" ERROR DUE TO PUBLISHER" + exception.getMessage());
+        }
+
+
+
+
+    }
+
+
+
 
 
 

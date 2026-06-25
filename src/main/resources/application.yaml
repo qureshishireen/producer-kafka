@@ -5,10 +5,11 @@ spring:
   application:
     name: producer
 
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      # to send object in the form of syri
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#  kafka:
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      # to send object in the form of syri
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 

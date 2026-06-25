@@ -1,7 +1,9 @@
 package com.kafka_producer.producer.service;
 
 import com.kafka_producer.producer.dto.Employee;
+import com.kafka_producer.producer.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,10 @@ import java.util.concurrent.CompletableFuture;
 public class KafkaProducerService {
     @Autowired
     public KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Value("${app.topic.name}")
+    private String topicName;
+
 
     public void sendTopic(String message) {
         CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send("KafkaTest", message);
@@ -33,26 +39,38 @@ public class KafkaProducerService {
 
         try {
             CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send("consumerTopic", employee);
-            future.whenComplete((result, exception) ->
-            {
-                if (exception == null) {
-                    System.out.println("Sent Message = [" + employee.toString() + "] with offset = "
-                            + result.getRecordMetadata().offset() + " ]"
-                    );
+            future.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("Sent message=[" + employee.toString() +
+                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
                 } else {
-                    System.out.println("Unable to send message" + exception.getMessage());
+                    System.out.println("Unable to send message=[" +
+                            employee.toString() + "] due to : " + ex.getMessage());
                 }
             });
-
-        } catch (Exception exception) {
-            System.out.println(" ERROR DUE TO PUBLISHER" + exception.getMessage());
+        } catch (Exception ex) {
+            System.out.println("ERROR : " + ex.getMessage());
         }
-
-
-
-
     }
 
+
+    //
+    public void sendEvents(User user) {
+        try {
+            CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topicName, user);
+            future.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("Sent message=[" + user.toString() +
+                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                } else {
+                    System.out.println("Unable to send message=[" +
+                            user.toString() + "] due to : " + ex.getMessage());
+                }
+            });
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
 
 

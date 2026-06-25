@@ -8,7 +8,7 @@ public class Employee {
 
 
     // to send the object  to via kafka
-     private String id ;
+     private int  id ;
       private  String name ;
      private  String email ;
      private  String contactNo ;
